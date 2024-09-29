@@ -14,6 +14,7 @@ type event struct {
 	date    string
 	artists string
 	genre   string
+	isImage bool
 }
 
 func errEvent(err string) []event {
@@ -23,6 +24,7 @@ func errEvent(err string) []event {
 		date:    "error",
 		artists: "error",
 		genre:   "error",
+		isImage: false,
 	}}
 }
 
@@ -95,6 +97,7 @@ func scrapeDachstock(url string) []event {
 			date:    eventDate,
 			artists: artists,
 			genre:   genre,
+			isImage: false,
 		})
 	})
 	return evList
@@ -128,6 +131,7 @@ func scrapeChessu(url string) []event {
 			date:    eventDate,
 			artists: artists,
 			genre:   genre,
+			isImage: false,
 		})
 	})
 	return evList
@@ -162,6 +166,7 @@ func scrapeISC(url string) []event {
 			date:    reTrailing.ReplaceAllString(reLeading.ReplaceAllString(eventDate, ""), ""),
 			artists: "", // ISC has no artists
 			genre:   reTrailing.ReplaceAllString(reLeading.ReplaceAllString(genre, ""), ""),
+			isImage: false,
 		})
 	})
 	return evList
@@ -195,6 +200,7 @@ func scrapeCafete(url string) []event {
 			date:    eventDate,
 			artists: artists,
 			genre:   genre,
+			isImage: false,
 		})
 	})
 	return evList
@@ -225,6 +231,7 @@ func scrapeHuebeli(url string) []event {
 			date:    eventDate,
 			artists: artists,
 			genre:   "",
+			isImage: false,
 		})
 	})
 
@@ -243,12 +250,30 @@ func scrapeHuebeli(url string) []event {
 	return evList
 }
 
+func scrapeLesAmis(url string) []event {
+	evList := []event{}
+	doc, err := scrapePage(url)
+
+	if err != nil {
+		return err
+	}
+
+	// Find the event list and iterate over each event item
+	programImg, _ := doc.Find("img").Eq(1).Attr("src") //.First().Attr("src")
+	evList = append(evList, event{
+		title:   programImg,
+		isImage: true,
+	})
+	return evList
+}
+
 func main() {
 	//dachEvs := scrapeDachstock("https://www.dachstock.ch/events")
 	//chessEvs := scrapeChessu("https://gaskessel.ch/programm/")
 	//iscEvs := scrapeISC("https://isc-club.ch/") // het keni artists
-	hueEvs := scrapeHuebeli("https://bierhuebeli.ch/") // hie si artists mengisch o eifach subtitles
-	for _, ev := range hueEvs {
+	//hueEvs := scrapeHuebeli("https://bierhuebeli.ch/") // hie si artists mengisch o eifach subtitles
+	leEvs := scrapeLesAmis("https://www.lesamis.ch/wohnzimmer/")
+	for _, ev := range leEvs {
 		fmt.Println("--------")
 		fmt.Println("Date: " + ev.date)
 		fmt.Println("Title: " + ev.title)
