@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -258,7 +259,6 @@ func scrapeLesAmis(url string) []event {
 		return err
 	}
 
-	// Find the event list and iterate over each event item
 	programImg, _ := doc.Find("img").Eq(1).Attr("src") //.First().Attr("src")
 	evList = append(evList, event{
 		title:   programImg,
@@ -267,13 +267,148 @@ func scrapeLesAmis(url string) []event {
 	return evList
 }
 
+func scrapeDeadEnd(url string) []event {
+	evList := []event{}
+	doc, err := scrapePage(url)
+
+	if err != nil {
+		return err
+	}
+
+	programImg, _ := doc.Find("#content").First().Find("img").First().Attr("src")
+	evList = append(evList, event{
+		title:   programImg,
+		isImage: true,
+	})
+
+	return evList
+}
+
+func scrapeTurnhalle(url string) []event {
+	evList := []event{}
+
+	doc, err := scrapePage(url)
+
+	if err != nil {
+		return err
+	}
+
+	// Find the event list and iterate over each event item
+	doc.Find(".slideinner").Each(func(i int, eventItem *goquery.Selection) {
+		if i == 0 {
+			return
+		}
+
+		textClassP, _ := eventItem.Find(".text").Find("p").Html()
+
+		// Extract event date
+		re := regexp.MustCompile("<br/?>")
+		eventDate := re.Split(textClassP, -1)[1]
+
+		// Extract event title
+		eventTitle := ""
+		eventItem.Find(".text").Find("span").Each(func(j int, titleItem *goquery.Selection) {
+			eventTitle += titleItem.Text() + " "
+		})
+
+		// Extract artist
+		genre := re.Split(textClassP, -1)[2]
+
+		evList = append(evList, event{
+			title:   eventTitle,
+			date:    eventDate,
+			artists: "",
+			genre:   genre,
+			isImage: false,
+		})
+	})
+
+	doc.Find(".stiltags").Each(func(i int, eventItem *goquery.Selection) {
+		genre := ""
+		eventItem.Find("a").Each(func(j int, eventItemInner *goquery.Selection) {
+			genre = genre + "," + eventItemInner.Text()
+		})
+		// remove first comma
+		if genre != "" {
+			genre = genre[1:]
+		}
+		evList[i].genre = genre
+	})
+
+	return evList
+}
+
+func scrapeKapitel(url string) []event {
+	evList := []event{}
+
+	currentTime := time.Now()
+	year := currentTime.Year() % 100
+	month := int(currentTime.Month())
+	re := regexp.MustCompile(`[^a-zA-Z0-9 _\-/\.]+`)
+	reLeading := regexp.MustCompile(`^\s+`)
+	reTrailing := regexp.MustCompile(`\s+$`)
+	spaceRe := regexp.MustCompile(` {2,}`)
+	for m := range []int{0, 1} {
+		if month == 12 {
+			year += 1
+			month = 1
+		} else {
+			month += 1
+		}
+		url = fmt.Sprintf("%s%d-%02d", url, year, month+m)
+
+		doc, err := scrapePage(url)
+
+		if err != nil {
+			return err
+		}
+
+		// Find the event list and iterate over each event item
+		doc.Find(".event-link").Each(func(i int, eventItem *goquery.Selection) {
+			// Extract event date
+			eventDate := reTrailing.ReplaceAllString(reLeading.ReplaceAllString(re.ReplaceAllString(eventItem.Find(".event-date-inner").Text(), ""), ""), "")
+
+			// Extract event title
+			eventTitle := reTrailing.ReplaceAllString(reLeading.ReplaceAllString(eventItem.Find(".size-medium").Text(), ""), "")
+
+			// Extract artist
+			artists := spaceRe.ReplaceAllString(reTrailing.ReplaceAllString(reLeading.ReplaceAllString(re.ReplaceAllString(eventItem.Find(".event-artist-list").Text(), ""), ""), ""), ", ")
+
+			// Extract genre
+			genre := ""
+			eventItem.Find(".event-tag").Each(func(j int, genreItem *goquery.Selection) {
+				genre += ", " + genreItem.Text()
+			})
+			if genre != "" {
+				genre = genre[1:]
+			}
+
+			if eventDate == "Club" {
+				return
+			}
+			evList = append(evList, event{
+				title:   eventTitle,
+				date:    eventDate,
+				artists: artists,
+				genre:   genre,
+				isImage: false,
+			})
+		})
+	}
+
+	return evList
+}
+
 func main() {
 	//dachEvs := scrapeDachstock("https://www.dachstock.ch/events")
 	//chessEvs := scrapeChessu("https://gaskessel.ch/programm/")
 	//iscEvs := scrapeISC("https://isc-club.ch/") // het keni artists
 	//hueEvs := scrapeHuebeli("https://bierhuebeli.ch/") // hie si artists mengisch o eifach subtitles
-	leEvs := scrapeLesAmis("https://www.lesamis.ch/wohnzimmer/")
-	for _, ev := range leEvs {
+	//leEvs := scrapeLesAmis("https://www.lesamis.ch/wohnzimmer/")
+	//deEvs := scrapeDeadEnd("https://dead-end.ch/programm/")
+	//thEvs := scrapeTurnhalle("https://www.progr.ch/de/turnhalle/programm/")
+	kapEvs := scrapeKapitel("https://www.kapitel.ch/programm/")
+	for _, ev := range kapEvs {
 		fmt.Println("--------")
 		fmt.Println("Date: " + ev.date)
 		fmt.Println("Title: " + ev.title)
