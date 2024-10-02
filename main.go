@@ -349,15 +349,15 @@ func scrapeKapitel(url string) []event {
 	reTrailing := regexp.MustCompile(`\s+$`)
 	spaceRe := regexp.MustCompile(` {2,}`)
 	for m := range []int{0, 1} {
-		if month == 12 {
-			year += 1
-			month = 1
-		} else {
-			month += 1
+		loopMonth := month + m
+		loopYear := year
+		if loopMonth == 13 {
+			loopYear += 1
+			loopMonth = 1
 		}
-		url = fmt.Sprintf("%s%d-%02d", url, year, month+m)
-
-		doc, err := scrapePage(url)
+		loopUrl := fmt.Sprintf("%s%d-%02d", url, loopYear, loopMonth)
+		fmt.Println(loopUrl)
+		doc, err := scrapePage(loopUrl)
 
 		if err != nil {
 			return err
@@ -399,6 +399,50 @@ func scrapeKapitel(url string) []event {
 	return evList
 }
 
+func scrapeStellwerk(url string) []event {
+	reLeading := regexp.MustCompile(`^\s+`)
+	reTrailing := regexp.MustCompile(`\s+$`)
+	evList := []event{}
+
+	doc, err := scrapePage(url)
+
+	if err != nil {
+		return err
+	}
+
+	// Find the event list and iterate over each event item
+	doc.Find(".post").Each(func(i int, eventItem *goquery.Selection) {
+		// Extract event date
+		eventDate := reTrailing.ReplaceAllString(reLeading.ReplaceAllString(eventItem.Find(".post__date").First().Text(), ""), "")
+
+		// Extract event title
+		eventTitle := eventItem.Find("h2").Text()
+
+		// Extract artist
+		artists := eventItem.Find("h3").Text()
+
+		// Extract genre
+		genre := ""
+		eventItem.Find(".post__tag").Each((func(j int, genreItem *goquery.Selection) {
+			genre = ", " + genreItem.Text()
+		}))
+		// remove first comma
+		if genre != "" {
+			genre = genre[1:]
+		}
+
+		evList = append(evList, event{
+			title:   eventTitle,
+			date:    eventDate,
+			artists: artists,
+			genre:   genre,
+			isImage: false,
+		})
+	})
+
+	return evList
+}
+
 func main() {
 	//dachEvs := scrapeDachstock("https://www.dachstock.ch/events")
 	//chessEvs := scrapeChessu("https://gaskessel.ch/programm/")
@@ -407,8 +451,9 @@ func main() {
 	//leEvs := scrapeLesAmis("https://www.lesamis.ch/wohnzimmer/")
 	//deEvs := scrapeDeadEnd("https://dead-end.ch/programm/")
 	//thEvs := scrapeTurnhalle("https://www.progr.ch/de/turnhalle/programm/")
-	kapEvs := scrapeKapitel("https://www.kapitel.ch/programm/")
-	for _, ev := range kapEvs {
+	//kapEvs := scrapeKapitel("https://www.kapitel.ch/programm/")
+	steEvs := scrapeStellwerk("https://www.stellwerk.be/klub")
+	for _, ev := range steEvs {
 		fmt.Println("--------")
 		fmt.Println("Date: " + ev.date)
 		fmt.Println("Title: " + ev.title)
