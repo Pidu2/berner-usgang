@@ -424,7 +424,49 @@ func scrapeStellwerk(url string) []event {
 		// Extract genre
 		genre := ""
 		eventItem.Find(".post__tag").Each((func(j int, genreItem *goquery.Selection) {
-			genre = ", " + genreItem.Text()
+			genre += ", " + genreItem.Text()
+		}))
+		// remove first comma
+		if genre != "" {
+			genre = genre[1:]
+		}
+
+		evList = append(evList, event{
+			title:   eventTitle,
+			date:    eventDate,
+			artists: artists,
+			genre:   genre,
+			isImage: false,
+		})
+	})
+
+	return evList
+}
+
+func scrapeRoessli(url string) []event {
+	evList := []event{}
+
+	doc, err := scrapePage(url)
+
+	if err != nil {
+		return err
+	}
+
+	// Find the event list and iterate over each event item
+	doc.Find(".page-rossli-events").Find(".event").Each(func(i int, eventItem *goquery.Selection) {
+		// Extract event date
+		eventDate := eventItem.Find(".event-date").Text()
+
+		// Extract event title
+		eventTitle := eventItem.Find("h2").Text()
+
+		// Extract artist
+		artists := ""
+
+		// Extract genre
+		genre := ""
+		eventItem.Find("li").Each((func(j int, genreItem *goquery.Selection) {
+			genre += ", " + genreItem.Text()
 		}))
 		// remove first comma
 		if genre != "" {
@@ -452,8 +494,8 @@ func main() {
 	//deEvs := scrapeDeadEnd("https://dead-end.ch/programm/")
 	//thEvs := scrapeTurnhalle("https://www.progr.ch/de/turnhalle/programm/")
 	//kapEvs := scrapeKapitel("https://www.kapitel.ch/programm/")
-	steEvs := scrapeStellwerk("https://www.stellwerk.be/klub")
-	for _, ev := range steEvs {
+	roEvs := scrapeRoessli("https://www.souslepont-roessli.ch/")
+	for _, ev := range roEvs {
 		fmt.Println("--------")
 		fmt.Println("Date: " + ev.date)
 		fmt.Println("Title: " + ev.title)
