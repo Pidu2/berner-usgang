@@ -9,6 +9,7 @@ import (
 func main() {
 	// TODO return actual err
 	// TODO build REST endpoint
+	// TODO ggf add rabe
 	//dachEvs := scrapers.ScrapeDachstock("https://www.dachstock.ch/events")
 	//chessEvs := scrapers.ScrapeChessu("https://gaskessel.ch/programm/")
 	//iscEvs := scrapers.ScrapeISC("https://isc-club.ch/")        // het keni artists
@@ -17,7 +18,10 @@ func main() {
 	//deEvs := scrapers.ScrapeDeadEnd("https://dead-end.ch/programm/")
 	//thEvs := scrapers.ScrapeTurnhalle("https://www.progr.ch/de/turnhalle/programm/")
 	//kapEvs := scrapers.ScrapeKapitel("https://www.kapitel.ch/programm/")
-	roEvs := scrapers.ScrapeRoessli("https://www.souslepont-roessli.ch/")
+	roEvs, err := scrapers.ScrapeRoessli("https://www.souslepont-roessli.ch/")
+	if err != nil {
+		return
+	}
 	for _, ev := range roEvs {
 		fmt.Println("--------")
 		fmt.Println("Date: " + ev.Date)

@@ -6,13 +6,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeChessu(url string) []models.Event {
+func ScrapeChessu(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Find the event list and iterate over each event item
@@ -37,5 +37,5 @@ func ScrapeChessu(url string) []models.Event {
 			IsImage: false,
 		})
 	})
-	return evList
+	return evList, nil
 }

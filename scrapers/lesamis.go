@@ -5,12 +5,12 @@ import (
 	"github.com/Pidu2/berner-usgang/utils"
 )
 
-func ScrapeLesAmis(url string) []models.Event {
+func ScrapeLesAmis(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	programImg, _ := doc.Find("img").Eq(1).Attr("src") //.First().Attr("src")
@@ -18,5 +18,5 @@ func ScrapeLesAmis(url string) []models.Event {
 		Title:   programImg,
 		IsImage: true,
 	})
-	return evList
+	return evList, nil
 }

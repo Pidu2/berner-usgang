@@ -8,7 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeStellwerk(url string) []models.Event {
+func ScrapeStellwerk(url string) ([]models.Event, error) {
 	reLeading := regexp.MustCompile(`^\s+`)
 	reTrailing := regexp.MustCompile(`\s+$`)
 	evList := []models.Event{}
@@ -16,7 +16,7 @@ func ScrapeStellwerk(url string) []models.Event {
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Find the event list and iterate over each event item
@@ -49,5 +49,5 @@ func ScrapeStellwerk(url string) []models.Event {
 		})
 	})
 
-	return evList
+	return evList, nil
 }

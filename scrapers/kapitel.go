@@ -10,7 +10,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeKapitel(url string) []models.Event {
+func ScrapeKapitel(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	currentTime := time.Now()
@@ -32,7 +32,7 @@ func ScrapeKapitel(url string) []models.Event {
 		doc, err := utils.ScrapePage(loopUrl)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		// Find the event list and iterate over each event item
@@ -68,5 +68,5 @@ func ScrapeKapitel(url string) []models.Event {
 		})
 	}
 
-	return evList
+	return evList, nil
 }

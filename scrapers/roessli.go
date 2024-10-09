@@ -6,13 +6,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeRoessli(url string) []models.Event {
+func ScrapeRoessli(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Find the event list and iterate over each event item
@@ -45,5 +45,5 @@ func ScrapeRoessli(url string) []models.Event {
 		})
 	})
 
-	return evList
+	return evList, nil
 }

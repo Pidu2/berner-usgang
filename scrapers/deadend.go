@@ -5,12 +5,12 @@ import (
 	"github.com/Pidu2/berner-usgang/utils"
 )
 
-func ScrapeDeadEnd(url string) []models.Event {
+func ScrapeDeadEnd(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	programImg, _ := doc.Find("#content").First().Find("img").First().Attr("src")
@@ -19,5 +19,5 @@ func ScrapeDeadEnd(url string) []models.Event {
 		IsImage: true,
 	})
 
-	return evList
+	return evList, nil
 }

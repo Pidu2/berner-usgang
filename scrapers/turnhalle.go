@@ -8,13 +8,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeTurnhalle(url string) []models.Event {
+func ScrapeTurnhalle(url string) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Find the event list and iterate over each event item
@@ -59,5 +59,5 @@ func ScrapeTurnhalle(url string) []models.Event {
 		evList[i].Genre = genre
 	})
 
-	return evList
+	return evList, nil
 }
