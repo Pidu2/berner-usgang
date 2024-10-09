@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	// TODO return actual err
 	// TODO build REST endpoint
 	// TODO ggf add rabe
 	//dachEvs := scrapers.ScrapeDachstock("https://www.dachstock.ch/events")
