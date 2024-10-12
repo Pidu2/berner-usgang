@@ -6,7 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeChessu(url string) ([]models.Event, error) {
+func ScrapeChessu(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
@@ -17,6 +17,9 @@ func ScrapeChessu(url string) ([]models.Event, error) {
 
 	// Find the event list and iterate over each event item
 	doc.Find(".eventpreview").Each(func(i int, eventItem *goquery.Selection) {
+		if len(evList) == limit {
+			return
+		}
 		// Extract event date
 		eventDate := eventItem.Find(".eventdatum").Text()
 

@@ -8,7 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeISC(url string) ([]models.Event, error) {
+func ScrapeISC(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
@@ -19,6 +19,9 @@ func ScrapeISC(url string) ([]models.Event, error) {
 
 	// Find the event list and iterate over each event item
 	doc.Find(".event_preview").Each(func(i int, eventItem *goquery.Selection) {
+		if len(evList) == limit {
+			return
+		}
 		// ISC has lots of whitespaces, remove them
 		reLeading := regexp.MustCompile(`^\s+`)
 		reTrailing := regexp.MustCompile(`\s+$`)

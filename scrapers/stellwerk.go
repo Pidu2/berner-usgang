@@ -8,7 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeStellwerk(url string) ([]models.Event, error) {
+func ScrapeStellwerk(url string, limit int) ([]models.Event, error) {
 	reLeading := regexp.MustCompile(`^\s+`)
 	reTrailing := regexp.MustCompile(`\s+$`)
 	evList := []models.Event{}
@@ -21,6 +21,9 @@ func ScrapeStellwerk(url string) ([]models.Event, error) {
 
 	// Find the event list and iterate over each event item
 	doc.Find(".post").Each(func(i int, eventItem *goquery.Selection) {
+		if len(evList) == limit {
+			return
+		}
 		// Extract event date
 		eventDate := reTrailing.ReplaceAllString(reLeading.ReplaceAllString(eventItem.Find(".post__date").First().Text(), ""), "")
 

@@ -5,7 +5,7 @@ import (
 	"github.com/Pidu2/berner-usgang/utils"
 )
 
-func ScrapeDeadEnd(url string) ([]models.Event, error) {
+func ScrapeDeadEnd(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 	doc, err := utils.ScrapePage(url)
 

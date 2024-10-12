@@ -6,7 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeRoessli(url string) ([]models.Event, error) {
+func ScrapeRoessli(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
@@ -17,6 +17,9 @@ func ScrapeRoessli(url string) ([]models.Event, error) {
 
 	// Find the event list and iterate over each event item
 	doc.Find(".page-rossli-events").Find(".event").Each(func(i int, eventItem *goquery.Selection) {
+		if len(evList) == limit {
+			return
+		}
 		// Extract event date
 		eventDate := eventItem.Find(".event-date").Text()
 

@@ -6,7 +6,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeHuebeli(url string) ([]models.Event, error) {
+func ScrapeHuebeli(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	doc, err := utils.ScrapePage(url)
@@ -46,6 +46,9 @@ func ScrapeHuebeli(url string) ([]models.Event, error) {
 		}
 		evList[i].Genre = genre
 	})
+	if len(evList) > limit {
+		return evList[:limit], nil
+	}
 
 	return evList, nil
 }

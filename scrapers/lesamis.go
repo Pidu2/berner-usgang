@@ -5,7 +5,7 @@ import (
 	"github.com/Pidu2/berner-usgang/utils"
 )
 
-func ScrapeLesAmis(url string) ([]models.Event, error) {
+func ScrapeLesAmis(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 	doc, err := utils.ScrapePage(url)
 

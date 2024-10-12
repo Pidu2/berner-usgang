@@ -10,7 +10,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ScrapeKapitel(url string) ([]models.Event, error) {
+func ScrapeKapitel(url string, limit int) ([]models.Event, error) {
 	evList := []models.Event{}
 
 	currentTime := time.Now()
@@ -37,6 +37,9 @@ func ScrapeKapitel(url string) ([]models.Event, error) {
 
 		// Find the event list and iterate over each event item
 		doc.Find(".event-link").Each(func(i int, eventItem *goquery.Selection) {
+			if len(evList) == limit {
+				return
+			}
 			// Extract event date
 			eventDate := reTrailing.ReplaceAllString(reLeading.ReplaceAllString(re.ReplaceAllString(eventItem.Find(".event-date-inner").Text(), ""), ""), "")
 
