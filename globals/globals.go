@@ -59,6 +59,7 @@ var (
 			URL:      getEnv("URL_STELLWERK", "https://www.stellwerk.be/klub"),
 		},
 	}
+	ScraperList = getScraperList()
 )
 
 func getEnv(key, defaultValue string) string {
@@ -66,4 +67,12 @@ func getEnv(key, defaultValue string) string {
 		return value
 	}
 	return defaultValue
+}
+
+func getScraperList() []string {
+	var scraperList []string
+	for scraper := range AvailableScrapers {
+		scraperList = append(scraperList, scraper)
+	}
+	return scraperList
 }

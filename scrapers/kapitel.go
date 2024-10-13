@@ -28,7 +28,6 @@ func ScrapeKapitel(url string, limit int) ([]models.Event, error) {
 			loopMonth = 1
 		}
 		loopUrl := fmt.Sprintf("%s%d-%02d", url, loopYear, loopMonth)
-		fmt.Println(loopUrl)
 		doc, err := utils.ScrapePage(loopUrl)
 
 		if err != nil {
