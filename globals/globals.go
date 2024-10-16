@@ -68,7 +68,7 @@ var (
 		"stellwerk": {
 			Function: scrapers.ScrapeStellwerk,
 			URL:      getEnv("URL_STELLWERK", "https://www.stellwerk.be/klub"),
-			Enabled:  getEnv("ENABLED_STELLWERK", "false"),
+			Enabled:  getEnv("ENABLED_STELLWERK", "true"),
 		},
 	}
 	ScraperList = getScraperList()
