@@ -72,6 +72,29 @@
     </div>
 
     <script>
+        function prepBody(key, display){
+            // Create a section for scraper results
+            const scraperSection = document.createElement('div');
+            scraperSection.classList.add('scraper-section');
+
+            // create anchor
+            const anchor = document.createElement('a');
+            anchor.setAttribute("name", key)
+            scraperSection.appendChild(anchor)
+
+            // Add a header for each scraper's result set
+            const scraperTitle = document.createElement('h3');
+            scraperTitle.classList.add('scraper-title');
+            scraperTitle.textContent = display;
+            scraperSection.appendChild(scraperTitle);
+
+            // Create a container for the results
+            const resultGrid = document.createElement('div');
+            resultGrid.classList.add('scraper-results-grid');
+            scraperSection.appendChild(resultGrid);
+            return [scraperSection, resultGrid];
+        }
+
         // Fetch list of scrapers
         async function fetchScrapers() {
             try {
@@ -94,31 +117,11 @@
                         listItem.appendChild(anchorLi);
                         scraperList.appendChild(listItem);
 
-                        // Create a section for scraper results
-                        const scraperSection = document.createElement('div');
-                        scraperSection.classList.add('scraper-section');
-
-                        // create anchor
-                        const anchor = document.createElement('a');
-                        anchor.setAttribute("name", key)
-                        scraperSection.appendChild(anchor)
-
-                        // Add a header for each scraper's result set
-                        const scraperTitle = document.createElement('h3');
-                        scraperTitle.classList.add('scraper-title');
-                        scraperTitle.textContent = value.displayname;
-                        scraperSection.appendChild(scraperTitle);
-
-                        // Create a container for the results
-                        const resultGrid = document.createElement('div');
-                        resultGrid.classList.add('scraper-results-grid');
-                        scraperSection.appendChild(resultGrid);
-
-                        // Add the section to the main results container
-                        scraperResults.appendChild(scraperSection);
+                        var body = prepBody(key, value.displayname);
+                        scraperResults.appendChild(body[0]);
 
                         // Fetch and display scraper results
-                        fetchScraperResults(key, resultGrid);
+                        fetchScraperResults(key, body[1]);
                     }
                 });
             } catch (error) {
@@ -169,9 +172,11 @@
             // Re-fetch all scraper results with the new limit
             const scrapers = document.querySelectorAll('#scraperList a');
             scrapers.forEach(scraperItem => {
-                const scraper = scraperItem.getAttribute("href");
-                //fetchScraperResults(scraper,  , limit)
-                // TODO: fetch all but you have to prep whole thing again
+                const scraperKey = scraperItem.getAttribute("href").replace("#", "");
+                const scraperDisplay = scraperItem.textContent;
+                var body = prepBody(scraperKey, scraperDisplay);
+                scraperResults.appendChild(body[0]);
+                fetchScraperResults(scraperKey, body[1], limit);
             });
         });
 
