@@ -23,7 +23,7 @@ func HandleScrape(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the scraper exists
 	scraper, exists := globals.AvailableScrapers[scraperName]
-	if !exists {
+	if !exists || scraper.Enabled != "true" {
 		http.Error(w, "Scraper not found", http.StatusNotFound)
 		return
 	}

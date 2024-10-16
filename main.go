@@ -17,18 +17,4 @@ func main() {
 	fmt.Println("Server is running on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
-	// TODO build REST endpoint
-	// TODO ggf add rabe
-
-	//roEvs, err := cache.ScrapeWithCache(globals.AvailableScrapers["roessli"], 5)
-	//if err != nil {
-	//	return
-	//}
-	//for _, ev := range roEvs {
-	//	fmt.Println("--------")
-	//	fmt.Println("Date: " + ev.Date)
-	//	fmt.Println("Title: " + ev.Title)
-	//	fmt.Println("Artists: " + ev.Artists)
-	//	fmt.Println("Genres: " + ev.Genre)
-	//}
 }
