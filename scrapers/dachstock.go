@@ -29,21 +29,21 @@ func ScrapeDachstock(url string, limit int) ([]models.Event, error) {
 		// Extract artist list (inside the .artist-list class)
 		var artists string
 		eventItem.Find(".artist-list .artist-name").Each(func(j int, artist *goquery.Selection) {
-			artists = artists + "," + artist.Text()
+			artists = artists + ", " + artist.Text()
 		})
 		// remove first comma
 		if artists != "" {
-			artists = artists[1:]
+			artists = artists[2:]
 		}
 
 		// Extract all tags (inside the .tag class)
 		var genre string
 		eventItem.Find(".tag").Each(func(k int, tag *goquery.Selection) {
-			genre = genre + "," + tag.Text()
+			genre = genre + ", " + tag.Text()
 		})
 		// remove first comma
 		if genre != "" {
-			genre = genre[1:]
+			genre = genre[2:]
 		}
 
 		// if there is no title set, then its probably a concert

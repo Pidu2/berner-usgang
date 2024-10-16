@@ -25,6 +25,9 @@ func ScrapeHuebeli(url string, limit int) ([]models.Event, error) {
 
 		// Extract artist
 		artists := eventItem.Find(".byline").Text()
+		if artists == " " {
+			artists = ""
+		}
 
 		evList = append(evList, models.Event{
 			Title:   eventTitle,

@@ -13,7 +13,7 @@ import (
 func HandleGetScrapers(w http.ResponseWriter, r *http.Request) {
 	// Return as JSON
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(globals.ScraperList)
+	json.NewEncoder(w).Encode(globals.AvailableScrapers)
 }
 
 // Handle the /scraper/<scraper> endpoint - calls the scraper function
