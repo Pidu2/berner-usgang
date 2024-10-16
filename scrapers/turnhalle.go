@@ -23,7 +23,7 @@ func ScrapeTurnhalle(url string, limit int) ([]models.Event, error) {
 			return
 		}
 
-		textClassP, _ := eventItem.Find(".text").Find("p").Html()
+		textClassP, _ := eventItem.Find(".text").Find("p").Last().Html()
 
 		// Extract event date
 		re := regexp.MustCompile("<br/?>")
