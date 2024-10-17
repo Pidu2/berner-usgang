@@ -6,14 +6,28 @@
     <title>Berner Usgangs Scraper</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body::before {
+            background-image: url("https://wallpapers.com/images/hd/fairy-lights-aesthetic-399tjhc3eyh6a9ri.jpg");
+            content: "";
+            position: fixed; /* Stay fixed while scrolling */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px); /* Adjust blur level */
+            z-index: -1; /* Ensure it stays behind the content */
+        }
         .scraper-results-grid {
-            background-color: #87A2FF;
-            border: 2px solid #000;  /* You can change the color and width */
+            /*background-color: #87A2FF;*/
             border-radius: 10px;     /* Adjust this value to change the roundness */
-            padding: 20px;           /* Optional: Add padding for inner content */
+            padding: 10px;           /* Optional: Add padding for inner content */
+            margin-bottom: 50px;
             border-width: 1px;
         }
         .result-card {
+            background-color: rgba(255, 255, 255, 0.4);
             border-radius: 10px;     /* Adjust this value to change the roundness */
             padding: 2px;           /* Optional: Add padding for inner content */
             margin-top: 10px;
@@ -21,12 +35,14 @@
             display: flex;
             justify-content: space-between;
             height: 200px;
+            border: 1px solid #000;  /* You can change the color and width */
         }
         .event-date {
-            background-color: #C4D7FF;
-            padding: 0px;
-            margin-right: 10px;     /* Space between left and right parts */
-            padding-left: 5px;
+            border-radius: 20px 0 0 20px;
+            /*background-color: #C4D7FF;*/
+            padding: 7px;
+            margin-right: 0px;     /* Space between left and right parts */
+            padding-left: 10px;
             flex-shrink: 0;         /* Prevent shrinking on smaller screens */
             width: 100px;
             align-content: center;
@@ -36,27 +52,30 @@
         .event-content {
             flex-grow: 1;               /* Allow right part to grow and take remaining space */
             text-align: left;           /* Align content to the right */
+            border-left: 1px solid #000;
         }
 
         .event-content-title {
-            background-color: #FFD7C4;
             height: 50%;
             padding-left: 10px;
+            border-bottom: 1px solid #000;
             display: grid;
             align-items: center;
             padding-top: 5px;
             overflow: hidden;
+            border-radius: 0 20px 0 0;
         }
         .event-content-artist {
-            background-color: #FFF4B5;
+            /*background-color: #FFF4B5;*/
             padding-left: 10px;
             height: 25%;
             display: grid;
             align-items: center;
             overflow: hidden;
+            border-radius: 0 0 20px 0;
         }
         .event-content-genre {
-            background-color: #FFF4B5;
+            /*background-color: #FFF4B5;*/
             padding-left: 10px;
             height: 25%;
             display: grid;
