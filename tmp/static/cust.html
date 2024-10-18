@@ -19,6 +19,17 @@
             filter: blur(8px); /* Adjust blur level */
             z-index: -1; /* Ensure it stays behind the content */
         }
+        .scraper-header {
+        }
+        .scraper-title{
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;     /* Adjust this value to change the roundness */
+            padding: 20px;
+            margin: 10px;
+            margin-bottom: 0px;
+            border-width: 1px;
+            border: 1px solid #000;  /* You can change the color and width */
+        }
         .scraper-results-grid {
             /*background-color: #87A2FF;*/
             border-radius: 10px;     /* Adjust this value to change the roundness */
@@ -117,7 +128,7 @@
             scraperSection.appendChild(anchor)
 
             // Add a header for each scraper's result set
-            const scraperTitle = document.createElement('h3');
+            const scraperTitle = document.createElement('h1');
             scraperTitle.classList.add('scraper-title');
             scraperTitle.textContent = display;
             scraperSection.appendChild(scraperTitle);
