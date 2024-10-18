@@ -20,6 +20,23 @@
             z-index: -1; /* Ensure it stays behind the content */
         }
         .scraper-header {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 10px;     /* Adjust this value to change the roundness */
+            padding: 20px;
+            margin: 10px;
+            margin-bottom: 0px;
+            border-width: 1px;
+            display: flex;
+        }
+        .header-left {
+            flex: 0 0 90%;
+        }
+        .header-right {
+            flex: 0 0 10%;
+        }
+        #limitNumber {
+            width: 35px;
         }
         .scraper-title{
             background-color: rgba(255, 255, 255, 0.6);
@@ -100,15 +117,13 @@
     <div class="container">
         <header class="scraper-header">
             <!-- List of Scrapers -->
-            <div>
-                <h2>Available Scrapers</h2>
+            <div class="header-left">
                 <ul id="scraperList" class="list-inline"></ul>
             </div>
 
-            <!-- Slider for Limit -->
-            <div>
-                <label for="limitSlider" class="form-label">Result Limit: <span id="limitValue">5</span></label>
-                <input type="range" class="form-range" min="1" max="20" step="1" id="limitSlider" value="5">
+            <!--Limit -->
+            <div class="header-right">
+                <input type="number" class="form-number" min="1" max="20" step="1" id="limitNumber" value="5">
             </div>
         </header>
 
@@ -208,9 +223,8 @@
         }
 
         // Update scraper results when the limit slider is changed
-        document.getElementById('limitSlider').addEventListener('input', (event) => {
+        document.getElementById('limitNumber').addEventListener('input', (event) => {
             const limit = event.target.value;
-            document.getElementById('limitValue').textContent = limit;
 
             // Clear the existing results
             const scraperResults = document.getElementById('scraperResults');
