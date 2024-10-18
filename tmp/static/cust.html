@@ -110,7 +110,13 @@
             align-items: center;
             overflow: hidden;
         }
-
+        /* Image fit to width of the container */
+        .fit-image {
+            width: 100%;
+            object-fit: cover;
+            object-position: top;
+            cursor: pointer; /* Pointer to indicate clickable image */
+        }
     </style>
 </head>
 <body>
@@ -206,14 +212,20 @@
                     const resultCard = document.createElement('div');
                     resultCard.classList.add('result-card');
 
-                    resultCard.innerHTML = `
-                        <div class="event-date">${result.date}</div>
-                        <div class="event-content">
-                        <div class="event-content-title"><h2>${result.title}</h2></div>
-                        <div class="event-content-genre"><p>${result.genre}</p></div>
-                        <div class="event-content-artist"><p>${result.artists}</p></div>
-                        </div>
-                    `;
+                    if (result.isimage) {
+                        resultCard.innerHTML = `
+                          <img src="${result.title}" alt="Image" class="fit-image" onclick="openImage(this.src)">
+                        `
+                    } else {
+                        resultCard.innerHTML = `
+                            <div class="event-date">${result.date}</div>
+                            <div class="event-content">
+                            <div class="event-content-title"><h2>${result.title}</h2></div>
+                            <div class="event-content-genre"><p>${result.genre}</p></div>
+                            <div class="event-content-artist"><p>${result.artists}</p></div>
+                            </div>
+                        `;
+                    }
 
                     resultGrid.appendChild(resultCard);
                 });
