@@ -117,6 +117,38 @@
             object-position: top;
             cursor: pointer; /* Pointer to indicate clickable image */
         }
+        /* Modal styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.8); /* Black with transparency */
+        }
+
+        /* Modal image */
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%; /* Limits the width of the modal to 90% of the viewport */
+            max-height: 90%; /* Limits the height of the modal to 90% of the viewport */
+            width: auto; /* Ensures the image keeps its original width and doesn't stretch */
+            height: auto; /* Ensures the image keeps its aspect ratio */
+        }
+
+        /* Close button */
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -138,6 +170,17 @@
     </div>
 
     <script>
+        function openImage(src) {
+            var modal = document.getElementById("imageModal");
+            var modalImg = document.getElementById("modalImage");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+        
+        function closeModal() {
+            var modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
         function prepBody(key, display){
             // Create a section for scraper results
             const scraperSection = document.createElement('div');
@@ -215,6 +258,10 @@
                     if (result.isimage) {
                         resultCard.innerHTML = `
                           <img src="${result.title}" alt="Image" class="fit-image" onclick="openImage(this.src)">
+                          <div id="imageModal" class="modal">
+                              <span class="close" onclick="closeModal()">&times;</span>
+                              <img class="modal-content" id="modalImage">
+                          </div>
                         `
                     } else {
                         resultCard.innerHTML = `
