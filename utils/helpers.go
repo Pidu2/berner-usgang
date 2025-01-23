@@ -8,7 +8,7 @@ import (
 )
 
 func handleError(err error) error {
-	log.Fatal(err)
+	log.Print(err)
 	return err
 }
 

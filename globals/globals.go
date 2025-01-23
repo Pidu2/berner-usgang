@@ -42,7 +42,7 @@ var (
 		"lesamis": {
 			Function:    scrapers.ScrapeLesAmis,
 			DisplayName: "Les Amis",
-			URL:         getEnv("URL_LESAMIS", "https://www.lesamis.ch/wohnzimmer/"),
+			URL:         getEnv("URL_LESAMIS", "https://www.lesamis.ch/programm/"),
 			Enabled:     getEnv("ENABLED_LESAMIS", "true"),
 		},
 		"deadend": {
