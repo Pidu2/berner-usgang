@@ -5,7 +5,7 @@ RUN go mod download
 COPY . .
 RUN go build -o server .
 
-FROM docker.io/library/alpine:3.23.0
+FROM docker.io/library/alpine:3.23.2
 WORKDIR /app
 COPY --from=builder /app/server /app/
 EXPOSE 8080
