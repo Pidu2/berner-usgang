@@ -1,4 +1,4 @@
-ame: Tag, Build and Push
+name: Tag, Build and Push
 
 on:
   push:
